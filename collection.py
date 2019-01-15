@@ -1,15 +1,9 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 # @Time    : 2019/1/15 3:06 PM
 # @Author  : Wu Kun
-# @Email   : wukun@hlchang.cn
-# @File    : deque 
-# @Software: PyCharm
-# @license : 娱网科道信息技术有限公司 copyright © 2015-2018
 
 import heapq
-from collections import deque, OrderedDict
+from collections import deque, OrderedDict, Counter, defaultdict
+from itertools import groupby
 
 
 def deque_test():
@@ -108,10 +102,73 @@ def dict_sort():
     print(d_sort_by_value)
 
 
+def counter():
+    words = ['aa',
+             'bb', 'bb',
+             'cc', 'cc', 'cc',
+             'dd', 'dd', 'dd', 'dd']
+    words_count = Counter(words)
+    print(words_count)
+    words_count['aa'] += 1
+    print(words_count)
+    words_count2 = Counter(words[2:9])
+    print(words_count2)
+    print(words_count + words_count2)
+    print(words_count - words_count2)
+
+
+def group_by():
+    rows = [
+        {'name': 'a', 'age': '10'},
+        {'name': 'b', 'age': '20'},
+        {'name': 'c', 'age': '30'},
+        {'name': 'd', 'age': '30'},
+        {'name': 'e', 'age': '20'},
+    ]
+    rows.sort(key=lambda i: i['age'])
+
+    for age, items in groupby(rows, key=lambda i: i['age']):
+        print(age)
+        for item in items:
+            print(' ', item)
+
+    rows_by_age = defaultdict(list)
+    for row in rows:
+        rows_by_age[row['age']].append(row)
+    print('20:', rows_by_age['20'])
+
+
+def filter_test():
+    nums = [1, 4, -5, 10, -7, 2, 3, -1]
+    pos_nums = [n for n in nums if n > 0]  # 列表推导式
+    print(pos_nums)
+    pos_nums_generator = (n for n in nums if n > 0)  # 生成器表达式，对内存友好
+    for num in pos_nums_generator:
+        print(num, end=', ')
+    print()
+
+    # 过滤条件难以在表达式中写时，使用filter
+    values = [1, 4, -5, 10, -7, 2, 3, -1, '-', 'N/A']
+
+    def is_int(val):
+        try:
+            v = int(val)
+            if v > 0:
+                return True
+        except ValueError:
+            return False
+
+    ivals = list(filter(is_int, values))
+    print(ivals)
+
+
 if __name__ == '__main__':
     # deque_test()
     # use_deque()
     # heap_test()
     # priority_queue()
     # ordered_dict()
-    dict_sort()
+    # dict_sort()
+    # counter()
+    # group_by()
+    filter_test()
