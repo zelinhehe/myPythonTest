@@ -2,7 +2,7 @@
 # @Author  : Wu Kun
 
 import heapq
-from collections import deque, OrderedDict, Counter, defaultdict
+from collections import deque, OrderedDict, Counter, defaultdict, namedtuple, ChainMap
 from itertools import groupby
 
 
@@ -17,8 +17,9 @@ def deque_test():
     print(q)
 
 
-def use_deque():
+def use_deque   ():
     def search(lines, pattern, history=5):
+        """搜索 lines中包含 pattern的 line，并记录本line的前5行"""
         previous_lines = deque(maxlen=history)
         for line in lines:
             if pattern in line:
@@ -61,7 +62,6 @@ def heap_test():
 def priority_queue():
 
     class PriorityQueue:
-
         def __init__(self):
             self._queue = []
 
@@ -140,8 +140,10 @@ def group_by():
 
 def filter_test():
     nums = [1, 4, -5, 10, -7, 2, 3, -1]
+
     pos_nums = [n for n in nums if n > 0]  # 列表推导式
     print(pos_nums)
+
     pos_nums_generator = (n for n in nums if n > 0)  # 生成器表达式，对内存友好
     for num in pos_nums_generator:
         print(num, end=', ')
@@ -162,6 +164,34 @@ def filter_test():
     print(ivals)
 
 
+def namedtuple_test():
+    Stock = namedtuple('Stock', ['name', 'shares', 'price'])
+    s = Stock('AAPL', 20, 100)
+    print(s.name, s.shares, s.price)
+    print(s[0], s[1], s[2])
+    s_name, s_shares, s_price = s
+    print(s_name, s_shares, s_price)
+
+    records = [('AAPL', 20, 100), ('BABA', 40, 200), ('AMZN', 40, 300)]
+    total = 0.0
+    for record in records:
+        s = Stock(*record)
+        total += s.shares * s.price
+    print(total)
+
+
+def chain_map():
+    a = {'x': 1, 'z': 3}
+    b = {'y': 2, 'z': 4}
+    c = ChainMap(a, b)
+    print(c)
+    print(c['x'], c['y'], c['z'])
+    print('x' in c.keys())
+    print(list(c.values()))
+    print(list(c.items()))
+    print(c.items())
+
+
 if __name__ == '__main__':
     # deque_test()
     # use_deque()
@@ -171,4 +201,6 @@ if __name__ == '__main__':
     # dict_sort()
     # counter()
     # group_by()
-    filter_test()
+    # filter_test()
+    # namedtuple_test()
+    chain_map()
