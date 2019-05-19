@@ -17,7 +17,7 @@ def deque_test():
     print(q)
 
 
-def use_deque   ():
+def use_deque():
     def search(lines, pattern, history=5):
         """搜索 lines中包含 pattern的 line，并记录本line的前5行"""
         previous_lines = deque(maxlen=history)
