@@ -21,7 +21,17 @@ if __name__ == "__main__":
     executor = ThreadPoolExecutor(max_workers=2)
     # 通过submit函数提交执行的函数到线程池中, submit 是立即返回
     task1 = executor.submit(get_html, 3)
-    # task2 = executor.submit(get_html, 2)
+    task2 = executor.submit(get_html, 2)
+
+    # #done方法用于判定某个任务是否完成
+    print(task1.done())
+    print(task2.cancel())
+    time.sleep(3)
+    print(task1.done())
+
+    # #result方法可以获取task的执行结果
+    print(task1.result())
+
 
     # 要获取已经成功的task的返回
     urls = [3, 2, 4]
@@ -35,11 +45,3 @@ if __name__ == "__main__":
     # for data in executor.map(get_html, urls):  # 按照任务submit的顺序，将task的结果返回
     #     print("get {} page".format(data))
 
-    # #done方法用于判定某个任务是否完成
-    # print(task1.done())
-    # print(task2.cancel())
-    # time.sleep(3)
-    # print(task1.done())
-    #
-    # #result方法可以获取task的执行结果
-    # print(task1.result())
