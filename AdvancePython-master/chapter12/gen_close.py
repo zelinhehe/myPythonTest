@@ -1,8 +1,9 @@
 def gen_func():
-    #1. 可以产出值， 2. 可以接收值(调用方传递进来的值)
     try:
         yield "http://projectsedu.com"
     except BaseException:
+    # except Exception:
+    # except GeneratorExit:
         pass
     yield 2
     yield 3
@@ -14,4 +15,4 @@ if __name__ == "__main__":
     gen.close()
     print("bobby")
 
-    #GeneratorExit是继承自BaseException， Exception
+    # GeneratorExit是继承自BaseException， Exception

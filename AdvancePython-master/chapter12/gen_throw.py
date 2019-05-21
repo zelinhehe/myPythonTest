@@ -1,5 +1,4 @@
 def gen_func():
-    #1. 可以产出值， 2. 可以接收值(调用方传递进来的值)
     try:
         yield "http://projectsedu.com"
     except Exception as e:

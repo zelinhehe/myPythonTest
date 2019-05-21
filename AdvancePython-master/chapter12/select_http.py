@@ -8,7 +8,7 @@
 使用 select 完成 http请求
     select + 注册回调 + 事件循环
     并发性高
-    使用单线程
+    使用单线程 loop
 """
 
 import time
@@ -27,7 +27,7 @@ class Fetcher:
         self.host = ""
         self.path = ""
         self.spider_url = ""
-        self.data = ""
+        self.data = b""
 
     def connected(self, key):
         """ 可写（connect OK）的 callback"""
@@ -55,10 +55,7 @@ class Fetcher:
         self.spider_url = spider_url
         url = urlparse(spider_url)
         self.host = url.netloc
-        self.path = url.path
-        self.data = b""
-        if self.path == "":
-            self.path = "/"
+        self.path = "/" if url.path == "" else url.path
 
         # 建立socket连接
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -82,7 +79,7 @@ def loop():
     while not stop:
         ready = selector.select()  # 状态
         for key, mask in ready:
-            print("fd:{} events:{} callback: {}".format(key.fd, key.events, key.data))
+            # print("fd:{} events:{} callback: {}".format(key.fd, key.events, key.data))
             callback = key.data
             callback(key)
     # 回调+事件循环+select(poll/epoll)

@@ -52,5 +52,13 @@ def get_url(url):
     client.close()
 
 if __name__ == "__main__":
-    get_url("http://www.baidu.com")
+    # get_url("http://www.baidu.com")
+    import time
+    start_time = time.time()
+
+    for i in range(20):
+        url = "http://shop.projectsedu.com/goods/{}/".format(i)
+        get_url(url)
+
+    print(time.time() - start_time)
 
