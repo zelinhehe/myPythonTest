@@ -2,13 +2,19 @@
 def g1():
     yield from gen()
 
+def gen():
+    r = yield
+    print(r)
+
 def main():
     g = g1()
     g.send(None)
+    g.send("hello")
 
-# 1. main:调用方 g1:委托生成器 gen:子生成器
-# 2. yield from 会在调用方与子生成器之间建立一个双向通道
+# main:调用方 g1:委托生成器 gen:子生成器
+# yield from 会在调用方与子生成器之间建立一个双向通道
 """
+
 
 def middle(result, key):  # 委托生成器
     while True:
@@ -27,20 +33,20 @@ def main():  # 调用方
     for key, data_set in data_sets.items():
         print("start key:", key)
         m = middle(result, key)
-        m.send(None) # 预激middle协程
+        m.send(None)  # 预激middle协程
         for value in data_set:
-            print("send", key, value)
+            print(key, "send", value)
             m.send(value)   # 给协程传递每一组的值
         m.send(None)
     print("result:", result)
 
 
-def sales_sum(pro_name):  # 子生成器
+def sales_sum(key):  # 子生成器
     total = 0
     nums = []
     while True:
         x = yield
-        print("recv", pro_name, x)
+        print(key, "recv", x)
         if not x:
             break
         total += x
