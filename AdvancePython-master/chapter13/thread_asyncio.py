@@ -1,25 +1,27 @@
-#使用多线程：在携程中集成阻塞io
+""" 使用多线程：在协程中集成阻塞io
+    协程是单线程模式
+    asyncio 是解决异步io编程的解决方案。异步IO包括 多线程、多进程、协程
+    我们知道，协程里不能加入阻塞io。但是有些接口或库只有阻塞形式的，此时我们就把阻塞io放到线程中。
+    每个线程池executor，作为一个异步任务task
+
+    方法 get_url 是阻塞的（connect）
+"""
+
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
 import socket
+from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
 
-def get_url(url):
-    #通过socket请求html
-    url = urlparse(url)
+def get_url(origin_url):
+    # 通过socket请求html
+    url = urlparse(origin_url)
     host = url.netloc
-    path = url.path
-    if path == "":
-        path = "/"
+    path = "/" if url.path == "" else url.path
 
-    #建立socket连接
+    # 建立socket连接
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # client.setblocking(False)
-    client.connect((host, 80)) #阻塞不会消耗cpu
-
-    #不停的询问连接是否建立好， 需要while循环不停的去检查状态
-    #做计算任务或者再次发起其他的连接请求
+    client.connect((host, 80))
 
     client.send("GET {} HTTP/1.1\r\nHost:{}\r\nConnection:close\r\n\r\n".format(path, host).encode("utf8"))
 
@@ -40,14 +42,18 @@ def get_url(url):
 if __name__ == "__main__":
     import time
     start_time = time.time()
+
     loop = asyncio.get_event_loop()
-    executor = ThreadPoolExecutor(3)
+    executor = ThreadPoolExecutor(10)
     tasks = []
-    for url in range(20):
-        url = "http://shop.projectsedu.com/goods/{}/".format(url)
+    for i in range(20):
+        url = "http://shop.projectsedu.com/goods/{}/".format(i)
         task = loop.run_in_executor(executor, get_url, url)
+        # task = get_url(url)
         tasks.append(task)
+
     loop.run_until_complete(asyncio.wait(tasks))
+
     print("last time:{}".format(time.time()-start_time))
 
-
+# 每个线程池executor，作为一个异步任务task
