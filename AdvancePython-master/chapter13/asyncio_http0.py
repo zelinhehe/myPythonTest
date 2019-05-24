@@ -19,22 +19,19 @@ async def get_url(origin_url):
         data = raw_line.decode("utf8")
         all_lines.append(data)
     html = "\n".join(all_lines)
+    print(html)
     return html
 
-async def main():
-    tasks = []
-    for i in range(20):
-        url = "http://shop.projectsedu.com/goods/{}/".format(i)
-        tasks.append(asyncio.ensure_future(get_url(url)))
-    for task in asyncio.as_completed(tasks):
-        result = await task
-        print(result)
 
 if __name__ == "__main__":
     start_time = time.time()
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    tasks = []
+    for i in range(20):
+        url = "http://shop.projectsedu.com/goods/{}/".format(i)
+        tasks.append(get_url(url))
+    loop.run_until_complete(asyncio.wait(tasks))
 
     print('last time:{}'.format(time.time()-start_time))
 
