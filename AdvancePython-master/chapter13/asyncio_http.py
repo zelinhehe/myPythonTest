@@ -26,7 +26,8 @@ async def main():
     for i in range(20):
         url = "http://shop.projectsedu.com/goods/{}/".format(i)
         tasks.append(asyncio.ensure_future(get_url(url)))
-    for task in asyncio.as_completed(tasks):
+
+    for task in asyncio.as_completed(tasks):  # 完成一个task就获取结果，而不是等所有的task都完成
         result = await task
         print(result)
 

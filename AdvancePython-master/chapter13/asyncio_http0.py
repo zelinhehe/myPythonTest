@@ -19,7 +19,6 @@ async def get_url(origin_url):
         data = raw_line.decode("utf8")
         all_lines.append(data)
     html = "\n".join(all_lines)
-    print(html)
     return html
 
 
@@ -30,8 +29,12 @@ if __name__ == "__main__":
     tasks = []
     for i in range(20):
         url = "http://shop.projectsedu.com/goods/{}/".format(i)
-        tasks.append(get_url(url))
+        # tasks.append(get_url(url))
+        tasks.append(asyncio.ensure_future(get_url(url)))
+
     loop.run_until_complete(asyncio.wait(tasks))
+    for task in tasks:  # 所有的task都执行完后，遍历task结果
+        print(task.result())
 
     print('last time:{}'.format(time.time()-start_time))
 
