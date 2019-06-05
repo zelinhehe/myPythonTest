@@ -14,7 +14,9 @@ class HtmlSpider(threading.Thread):
     def run(self):
         time.sleep(2)
         print("got html text success")
+        print("release before")
         self.sem.release()
+        print("release before")
 
 class UrlProducer(threading.Thread):
     def __init__(self, sem):
@@ -23,7 +25,9 @@ class UrlProducer(threading.Thread):
 
     def run(self):
         for i in range(20):
+            print("acquire before", i)
             self.sem.acquire()
+            print("acquire after", i)
             html_thread = HtmlSpider("https://baidu.com/{}".format(i), self.sem)
             html_thread.start()
 
