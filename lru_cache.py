@@ -1,4 +1,4 @@
-from collection import OrderedDict
+from collections import OrderedDict
 
 class LRUCache:
     def __init__(self, capactity=4):
