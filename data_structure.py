@@ -112,6 +112,76 @@ def test_topK():
         print(heapq.heappop(min_heap))
 
 
+class QueueWithTwoStacks:
+    """
+    用两个栈实现队列
+    """
+    def __init__(self):
+        self._stack1 = []
+        self._stack2 = []
+
+    def append(self, x):  # 入队就是往栈1里加
+        self._stack1.append(x)
+
+    def pop(self):  # 出队就是从栈2中出
+        if self._stack2:  # 如果栈2中还有元素（上次从栈1转移到栈2的元素）则直接从栈2中出
+            return self._stack2.pop()
+        else:  # 如果栈2是空的，就把栈1的元素全部转移到栈1中
+            if self._stack1:
+                while self._stack1:
+                    self._stack2.append(self._stack1.pop())
+                return self._stack2.pop()
+            else:
+                return None
+
+
+def test_queue_with_two_stacks():
+    q = QueueWithTwoStacks()
+    q.append(1)
+    q.append(2)
+    print(q.pop())
+    q.append(3)
+    q.append(4)
+    print(q.pop())
+
+
+class StackWithTwoQueues:
+    def __init__(self):
+        self._stack1 = []
+        self._stack2 = []
+
+    def push(self, x):
+        if len(self._stack1) == 0:
+            self._stack1.append(x)
+        elif len(self._stack2) == 0:
+            self._stack2.append(x)
+
+        if len(self._stack2) == 1 and len(self._stack1) >= 1:
+            while self._stack1:
+                self._stack2.append(self._stack1.pop(0))
+        elif len(self._stack1) == 1 and len(self._stack2) > 1:
+            while self._stack2:
+                self._stack1.append(self._stack2.pop(0))
+
+    def pop(self):
+        if self._stack1:
+            return self._stack1.pop(0)
+        elif self._stack2:
+            return self._stack2.pop(0)
+        else:
+            return None
+
+
+def test_stack_with_two_queues():
+    q = StackWithTwoQueues()
+    q.push(1)
+    q.push(2)
+    print(q.pop())
+    q.push(3)
+    q.push(4)
+    print(q.pop())
+
+
 if __name__ == '__main__':
     # head = gen_list(range(10))
     # print_list(head)
@@ -127,4 +197,6 @@ if __name__ == '__main__':
     # print(q.pop())
     # print(len(q))
 
-    test_topK()
+    # test_topK()
+    test_queue_with_two_stacks()
+    test_stack_with_two_queues()
